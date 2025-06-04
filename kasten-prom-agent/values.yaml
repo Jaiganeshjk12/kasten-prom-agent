@@ -16,7 +16,7 @@ kasten:
 # Prometheus Agent configuration for remote_write
 remoteWrite:
   # URL of the central Prometheus server's remote write endpoint
-  url: "http://your-central-prometheus:9090/api/v1/write"
+  url: ""
 
   # Basic Authentication configuration
   basicAuth:
