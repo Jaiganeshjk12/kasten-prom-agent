@@ -1,0 +1,6 @@
+apiVersion: v2
+name: kasten-prom-agent
+description: A Helm chart for deploying Prometheus in agent mode for usage with Kasten
+type: application
+version: 1.0.0
+appVersion: "2.50.0"

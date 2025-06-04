@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    {{- include "prometheus-agent-chart.labels" . | nindent 4 }}
+  name: {{ include "prometheus-agent-chart.fullname" . }}-netpol
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: {{ .Release.Name }}
+  - ports:
+    - port: http
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      release: k10      
+  policyTypes:
+  - Ingress

@@ -1,0 +1,52 @@
+# Default values for prometheus-agent-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: prom/prometheus
+  tag: v2.50.0
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+#default kasten namespace is set to kasten-io
+kasten:
+  namespace: kasten-io
+
+# Prometheus Agent configuration for remote_write
+remoteWrite:
+  # URL of the central Prometheus server's remote write endpoint
+  url: "http://your-central-prometheus:9090/api/v1/write"
+
+  # Basic Authentication configuration
+  basicAuth:
+    enabled: false
+    # Username for basic authentication. If provided, it will be set as an environment variable.
+    # For sensitive usernames, consider managing them directly in the secret alongside the password.
+    username: ""
+    # Name of the Kubernetes Secret containing the basic auth password.
+    # The secret should have a key named 'password' by default, or you can specify 'passwordSecretKey'.
+    passwordSecretName: ""
+    passwordSecretKey: "password" # Key within the secret that holds the password
+
+  # TLS configuration for remote_write
+  tls:
+    enabled: false
+    # Name of the Kubernetes Secret containing the CA certificate.
+    # If provided, TLS will be enabled and the secret will be mounted.
+    # The secret should have a key named 'ca.crt' by default, or you can specify 'caCertSecretKey'.
+    caCertSecretName: ""
+    caCertSecretKey: "ca.crt" # Key within the secret that holds the CA certificate
+
+#clusterName used to add a label to all the metrics exported by this agent. 
+#You will have to make sure that the cluster name is unique per kasten instance inorder to avoid confusion while ingesting metrics from multiple kasten instance.
+clusterName: example-cluster
+
+# Resource limits for the Prometheus Agent pod
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

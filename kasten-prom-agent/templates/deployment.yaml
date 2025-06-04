@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "prometheus-agent-chart.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "prometheus-agent-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "prometheus-agent-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "prometheus-agent-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "prometheus-agent-chart.fullname" . }}-sa
+      containers:
+      - name: prometheus-agent
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args:
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--enable-feature=agent"
+        ports:
+        - containerPort: 9090
+          name: http
+        volumeMounts:
+        - name: data-volume
+          mountPath: /prometheus
+        - name: config-volume
+          mountPath: /etc/prometheus
+        {{- if .Values.remoteWrite.basicAuth.enabled }}
+        - name: basic-auth-secret
+          mountPath: /etc/prometheus/secrets/basic-auth
+          readOnly: true
+        {{- end }}
+        {{- if .Values.remoteWrite.tls.enabled }}
+        - name: tls-certs-secret
+          mountPath: /etc/prometheus/secrets/tls-certs
+          readOnly: true
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /-/ready
+            port: 9090
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 15
+          periodSeconds: 10
+      volumes:
+      - name: data-volume
+        emptyDir: {} 
+      - name: config-volume
+        configMap:
+          name: {{ include "prometheus-agent-chart.fullname" . }}-config
+      {{- if .Values.remoteWrite.basicAuth.enabled }}
+      - name: basic-auth-secret
+        secret:
+          secretName: {{ .Values.remoteWrite.basicAuth.passwordSecretName }}
+      {{- end }}
+      {{- if .Values.remoteWrite.tls.enabled }}
+      - name: tls-certs-secret
+        secret:
+          secretName: {{ .Values.remoteWrite.tls.caCertSecretName }}
+      {{- end }}

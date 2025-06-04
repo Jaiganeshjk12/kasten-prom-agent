@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "prometheus-agent-chart.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "prometheus-agent-chart.labels" . | nindent 4 }}
+data:
+  prometheus.yml: |
+    # Prometheus Agent configuration
+    remote_write:
+      - url: {{ .Values.remoteWrite.url | quote }}
+        {{- if .Values.remoteWrite.basicAuth.enabled }}
+        basic_auth:
+          username: {{ .Values.remoteWrite.basicAuth.username }}
+          password_file: /etc/prometheus/secrets/basic-auth/{{ .Values.remoteWrite.basicAuth.passwordSecretKey }}
+        {{- end }}
+        {{- if .Values.remoteWrite.tls.enabled }}
+        tls_config:
+          ca_file: /etc/prometheus/secrets/tls-certs/{{ .Values.remoteWrite.tls.caCertSecretKey }}
+        {{- end }}
+        write_relabel_configs:
+          - source_labels: [__address__]
+            regex: '(.*)'
+            target_label: cluster
+            replacement: {{ .Values.clusterName | quote }}
+    scrape_configs:
+      - job_name: httpServiceDiscovery
+        http_sd_configs:
+          - url: http://metering-svc.{{ .Values.kasten.namespace }}.svc.cluster.local:8000/v0/listScrapeTargets
+      - job_name: k10-pods
+        scheme: http
+        metrics_path: /metrics
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              own_namespace: true
+            selectors:
+              - role: pod
+                label: "component=executor"
