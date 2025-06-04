@@ -1,5 +1,3 @@
-# kasten-prom-agent
-Prometheus in Agent mode for scraping and remote_writing Kasten's metrics
 # Prometheus Agent Helm Chart
 
 This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster, configured to scrape metrics from Kasten's prometheus instance and remotely write them to a central Prometheus server or compatible remote storage endpoint.
