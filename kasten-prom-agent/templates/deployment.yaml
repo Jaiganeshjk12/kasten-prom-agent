@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "prometheus-agent-chart.fullname" . }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "prometheus-agent-chart.labels" . | nindent 4 }}
@@ -15,7 +15,7 @@ spec:
       labels:
         {{- include "prometheus-agent-chart.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "prometheus-agent-chart.fullname" . }}-sa
+      serviceAccountName: {{ .Release.Name }}-sa
       containers:
       - name: prometheus-agent
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -60,7 +60,7 @@ spec:
         emptyDir: {} 
       - name: config-volume
         configMap:
-          name: {{ include "prometheus-agent-chart.fullname" . }}-config
+          name: {{ .Release.Name }}-config
       {{- if .Values.remoteWrite.basicAuth.enabled }}
       - name: basic-auth-secret
         secret:

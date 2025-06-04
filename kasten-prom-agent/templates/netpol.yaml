@@ -3,7 +3,7 @@ kind: NetworkPolicy
 metadata:
   labels:
     {{- include "prometheus-agent-chart.labels" . | nindent 4 }}
-  name: {{ include "prometheus-agent-chart.fullname" . }}-netpol
+  name: {{ .Release.Name }}-netpol
   namespace: {{ .Release.Namespace }}
 spec:
   ingress:
