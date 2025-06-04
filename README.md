@@ -1,4 +1,4 @@
-# Prometheus Agent Helm Chart
+# Prometheus Agent Helm Chart for Veeam Kasten
 
 This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster, configured to scrape metrics from Kasten's prometheus instance and remotely write them to a central Prometheus server or compatible remote storage endpoint.
 
