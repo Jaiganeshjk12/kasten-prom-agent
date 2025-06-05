@@ -23,7 +23,7 @@ spec:
         args:
           - "--config.file=/etc/prometheus/prometheus.yml"
           - "--agent"
-          - "--storage.agent.wal-compression=true"
+          - "--storage.agent.wal-compression"
         ports:
         - containerPort: 9090
           name: http
