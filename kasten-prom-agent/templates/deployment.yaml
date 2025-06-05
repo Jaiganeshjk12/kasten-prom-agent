@@ -22,7 +22,8 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
           - "--config.file=/etc/prometheus/prometheus.yml"
-          - "--enable-feature=agent"
+          - "--agent"
+          - "--storage.agent.wal-compression=true"
         ports:
         - containerPort: 9090
           name: http
