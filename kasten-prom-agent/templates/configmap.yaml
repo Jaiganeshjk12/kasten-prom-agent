@@ -18,6 +18,11 @@ data:
         {{- if .Values.remoteWrite.tls.enabled }}
         tls_config:
           ca_file: /etc/prometheus/secrets/tls-certs/{{ .Values.remoteWrite.tls.caCertSecretKey }}
+          {{- if .Values.remoteWrite.tls.insecure_skip_verify }}
+          insecure_skip_verify: true
+          {{- else }}
+          insecure_skip_verify: false
+          {{- end }}
         {{- end }}
         write_relabel_configs:
           - source_labels: [__address__]

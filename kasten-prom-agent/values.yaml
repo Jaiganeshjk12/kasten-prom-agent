@@ -37,6 +37,8 @@ remoteWrite:
     # The secret should have a key named 'ca.crt' by default, or you can specify 'caCertSecretKey'.
     caCertSecretName: ""
     caCertSecretKey: "ca.crt" # Key within the secret that holds the CA certificate
+    #Skip TLS verification
+    insecure_skip_verify: false
 
 #clusterName used to add a label to all the metrics exported by this agent. 
 #You will have to make sure that the cluster name is unique per kasten instance inorder to avoid confusion while ingesting metrics from multiple kasten instance.
