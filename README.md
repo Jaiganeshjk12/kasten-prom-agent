@@ -82,6 +82,7 @@ Here’s a markdown table summarizing all the configurable values from your Helm
 | remoteWrite.tls.enabled                 | Enable TLS for remote write.                                                                                                     | false                                |
 | remoteWrite.tls.caCertSecretName        | Name of Kubernetes Secret containing the CA certificate.                                                                         | ""                                   |
 | remoteWrite.tls.caCertSecretKey         | Key within the secret that holds the CA certificate.                                                                             | ca.crt                               |
+| remoteWrite.tls.insecure_skip_verify         | Toggle to skip TLS verification                                                                             | false                               |
 | clusterName                             | Label added to all metrics exported by this agent to identify the cluster.                                                       | example-cluster                      |
 | resources.limits.cpu                    | CPU resource limit for the Prometheus Agent pod.                                                                                 | 200m                                 |
 | resources.limits.memory                 | Memory resource limit for the Prometheus Agent pod.                                                                              | 256Mi                                |
