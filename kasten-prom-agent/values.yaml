@@ -4,7 +4,7 @@
 
 image:
   repository: prom/prometheus
-  tag: v2.50.0
+  tag: v3.41.0
   pullPolicy: IfNotPresent
 
 replicaCount: 1
