@@ -3,13 +3,13 @@ entries:
   kasten-prom-agent:
   - apiVersion: v2
     appVersion: 3.41.0
-    created: "2025-06-05T14:29:45.688919+05:30"
+    created: "2025-06-05T15:10:22.894439+05:30"
     description: A Helm chart for deploying Prometheus in agent mode for usage with
       Kasten
-    digest: e315edaeb9fb4f4b065e2789d2e766233bcdcbe5df3deddc62c7c45a37489262
+    digest: 6193cc5a6ce490c6eeb1c09811178881c85cb6ddc5991351d3dc013abe6e6d0f
     name: kasten-prom-agent
     type: application
     urls:
     - https://jaiganeshjk12.github.io/kasten-prom-agent/kasten-prom-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2025-06-05T14:29:45.688436+05:30"
+generated: "2025-06-05T15:10:22.893846+05:30"
