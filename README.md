@@ -4,7 +4,7 @@ This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster
 
 ## Features
 
-* Deploys Prometheus Agent in agent mode (`--enable-feature=agent`).
+* Deploys Prometheus Agent in agent mode.
 * Configurable `remote_write` URL.
 * Supports basic authentication for `remote_write` using a Kubernetes Secret for the password.
 * Conditionally enables TLS for `remote_write` by mounting a CA certificate from a Kubernetes Secret.
