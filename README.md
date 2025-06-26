@@ -80,7 +80,7 @@ This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster
       --set remoteWrite.bearerToken.secretName=<SecretName-With-BEARER-TOKEN-FOR-REMOTE-RECEIVER> \
       --set remoteWrite.bearerToken.secretKey=my-prometheus-password-secret
       # Add other --set flags as needed (see Configuration section)
-
+    ```
 ## Configuration
 
 The following table lists the configurable parameters of the Prometheus Agent Helm chart and their default values. These can be overridden using `--set` flags during `helm install` or by providing a custom `values.yaml` file.
