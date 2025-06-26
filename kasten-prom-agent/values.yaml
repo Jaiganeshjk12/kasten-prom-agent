@@ -18,6 +18,12 @@ remoteWrite:
   # URL of the central Prometheus server's remote write endpoint
   url: ""
 
+  #bearer token configuration
+  bearerToken:
+    enabled: false
+    secretName: "" # Name of the Kubernetes Secret containing the bearer token
+    secretKey: "token"  # Key within the Secret that holds the token value(Defaulted to `token`)
+
   # Basic Authentication configuration
   basicAuth:
     enabled: false
@@ -42,7 +48,7 @@ remoteWrite:
 
 #clusterName used to add a label to all the metrics exported by this agent. 
 #You will have to make sure that the cluster name is unique per kasten instance inorder to avoid confusion while ingesting metrics from multiple kasten instance.
-clusterName: example-cluster
+clusterName: ""
 
 # Resource limits for the Prometheus Agent pod
 resources:

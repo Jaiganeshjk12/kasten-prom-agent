@@ -10,6 +10,10 @@ data:
     # Prometheus Agent configuration
     remote_write:
       - url: {{ .Values.remoteWrite.url | quote }}
+        {{- if .Values.remoteWrite.bearerToken.enabled }}
+        # Use bearer_token_file to read the token from a mounted secret
+        bearer_token_file: /etc/prometheus/secrets/{{ .Values.remoteWrite.bearerToken.secretKey | default "token" }}
+        {{- end }}
         {{- if .Values.remoteWrite.basicAuth.enabled }}
         basic_auth:
           username: {{ .Values.remoteWrite.basicAuth.username }}

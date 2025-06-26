@@ -1,0 +1,225 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Kasten Prometheus Agent Values Schema",
+  "description": "Schema for validating values provided to the Kasten Prometheus Agent Helm chart. More complex validation rules are implemented in _helpers.tpl.",
+  "type": "object",
+  "properties": {
+    "image": {
+      "type": "object",
+      "description": "Container image configuration for the Prometheus Agent.",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Prometheus docker image repository.",
+          "default": "prom/prometheus"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Prometheus image tag.",
+          "default": "v3.4.1"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Image pull policy.",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "default": "IfNotPresent"
+        }
+      },
+      "required": [
+        "repository",
+        "tag",
+        "pullPolicy"
+      ]
+    },
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of Prometheus Agent replicas.",
+      "minimum": 1,
+      "default": 1
+    },
+    "kasten": {
+      "type": "object",
+      "description": "Kasten specific configurations.",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "description": "Namespace in which Kasten is installed. Used for the scrape config discovery endpoint.",
+          "default": "kasten-io"
+        }
+      },
+      "required": [
+        "namespace"
+      ]
+    },
+    "remoteWrite": {
+      "type": "object",
+      "description": "Configuration for remote write to a central Prometheus server or compatible storage. Consult _helpers.tpl for complex validation rules.",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "URL of the central Prometheus server or compatible remote storage endpoint.",
+          "format": "uri",
+          "pattern": "^https?://.*$",
+          "default": ""
+        },
+        "basicAuth": {
+          "type": "object",
+          "description": "Basic authentication configuration for remote write. 'enabled' and 'passwordSecretName' have conditional validation in _helpers.tpl.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable basic authentication for remote write.",
+              "default": false
+            },
+            "username": {
+              "type": "string",
+              "description": "Username for basic authentication.",
+              "default": ""
+            },
+            "passwordSecretName": {
+              "type": "string",
+              "description": "Name of Kubernetes Secret containing the basic auth password. Required and must not be empty if basicAuth.enabled is true (validated in _helpers.tpl).",
+              "default": ""
+            },
+            "passwordSecretKey": {
+              "type": "string",
+              "description": "Key within the secret that holds the password.",
+              "default": "password"
+            }
+          },
+          "required": [
+            "enabled",
+            "username",
+            "passwordSecretName",
+            "passwordSecretKey"
+          ]
+        },
+        "bearerToken": {
+          "type": "object",
+          "description": "Bearer token authentication configuration for remote write. 'enabled' and 'secretName' have conditional validation in _helpers.tpl.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable Bearer token type authentication for remote write endpoint.",
+              "default": false
+            },
+            "secretName": {
+              "type": "string",
+              "description": "Name of Kubernetes Secret containing the bearer token for auth. Required and must not be empty if bearerToken.enabled is true (validated in _helpers.tpl).",
+              "default": ""
+            },
+            "secretKey": {
+              "type": "string",
+              "description": "Key within the secret that holds the bearer token.",
+              "default": "token"
+            }
+          },
+          "required": [
+            "enabled",
+            "secretName",
+            "secretKey"
+          ]
+        },
+        "tls": {
+          "type": "object",
+          "description": "TLS configuration for remote write.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable TLS for remote write.",
+              "default": false
+            },
+            "caCertSecretName": {
+              "type": "string",
+              "description": "Name of Kubernetes Secret containing the CA certificate.",
+              "default": ""
+            },
+            "caCertSecretKey": {
+              "type": "string",
+              "description": "Key within the secret that holds the CA certificate.",
+              "default": "ca.crt"
+            },
+            "insecure_skip_verify": {
+              "type": "boolean",
+              "description": "Toggle to skip TLS verification.",
+              "default": false
+            }
+          },
+          "required": [
+            "enabled",
+            "caCertSecretName",
+            "caCertSecretKey",
+            "insecure_skip_verify"
+          ]
+        }
+      },
+      "required": [
+        "url",
+        "basicAuth",
+        "bearerToken",
+        "tls"
+      ]
+    },
+    "clusterName": {
+      "type": "string",
+      "description": "Label added to all metrics exported by this agent to identify the cluster.",
+      "default": "example-cluster"
+    },
+    "resources": {
+      "type": "object",
+      "description": "Resource limits and requests for the Prometheus Agent pod.",
+      "properties": {
+        "limits": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "description": "CPU resource limit for the Prometheus Agent pod.",
+              "default": "200m"
+            },
+            "memory": {
+              "type": "string",
+              "description": "Memory resource limit for the Prometheus Agent pod.",
+              "default": "256Mi"
+            }
+          },
+          "required": [
+            "cpu",
+            "memory"
+          ]
+        },
+        "requests": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "description": "CPU resource request for the Prometheus Agent pod.",
+              "default": "100m"
+            },
+            "memory": {
+              "type": "string",
+              "description": "Memory resource request for the Prometheus Agent pod.",
+              "default": "128Mi"
+            }
+          },
+          "required": [
+            "cpu",
+            "memory"
+          ]
+        }
+      },
+      "required": [
+        "limits",
+        "requests"
+      ]
+    }
+  },
+  "required": [
+    "image",
+    "replicaCount",
+    "kasten",
+    "remoteWrite",
+    "clusterName",
+    "resources"
+  ]
+}

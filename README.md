@@ -25,13 +25,21 @@ This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster
         helm repo add kasten-prom-agent https://jaiganeshjk12.github.io/kasten-prom-agent/
         helm repo update
         ```
-2.  **Prepare Secrets (if using Basic Auth or TLS):**
+2.  **Prepare Secrets (if using Basic Auth or Bearer Token or TLS):**
 
     * **For Basic Authentication Password:**
         Create a Kubernetes Secret containing the password for your remote write endpoint. By default, the chart expects a key named `password`.
         ```bash
         kubectl create secret generic my-prometheus-password-secret \
           --from-literal=password='your_secure_password' \
+          -n kasten-io
+        ```
+
+    * **For Bearer Authentication Token:**
+        Create a Kubernetes Secret containing the bearer token for your remote write endpoint.
+        ```bash
+        kubectl create secret generic bearer-token-secret \
+          --from-literal=token='your_api_token' \
           -n kasten-io
         ```
 
@@ -47,7 +55,7 @@ This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster
 3.  **Install the Chart:**
 
     Navigate to the directory containing the `prometheus-agent-chart` folder (e.g., if `prometheus-agent-chart` is in your current directory).
-
+    * **Example for using Basic Auth and tls ca certificate for remote write endpoint:**
     ```bash
     helm install k10-prom-agent kasten-prom-agent/kasten-prom-agent  \
       --namespace kasten-io \
@@ -56,10 +64,22 @@ This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster
       --set remoteWrite.tls.enabled=true \
       --set remoteWrite.tls.caCertSecretName=my-ca-cert-secret \
       --set remoteWrite.basicAuth.enabled=true \
-      --set remoteWrite.basicAuth.username=<USERNAME-FOR-REMOTE-RECEIVER> \
+      --set remoteWrite.basicAuth.username=<SecretName-With-USERNAME-FOR-REMOTE-RECEIVER> \
       --set remoteWrite.basicAuth.passwordSecretName=my-prometheus-password-secret
       # Add other --set flags as needed (see Configuration section)
     ```
+    * **Example for using Basic Auth and tls ca certificate for remote write endpoint:**
+    ```bash
+    helm install k10-prom-agent kasten-prom-agent/kasten-prom-agent  \
+      --namespace kasten-io \
+      --set remoteWrite.url="https://your-central-prometheus:9090/api/v1/write" \
+      --set clusterName="<UniqueClusterName>" \
+      --set remoteWrite.tls.enabled=true \
+      --set remoteWrite.tls.caCertSecretName=my-ca-cert-secret \
+      --set remoteWrite.bearerToken.enabled=true \
+      --set remoteWrite.bearerToken.secretName=<SecretName-With-BEARER-TOKEN-FOR-REMOTE-RECEIVER> \
+      --set remoteWrite.bearerToken.secretKey=my-prometheus-password-secret
+      # Add other --set flags as needed (see Configuration section)
 
 ## Configuration
 
@@ -79,11 +99,14 @@ Here’s a markdown table summarizing all the configurable values from your Helm
 | remoteWrite.basicAuth.username          | Username for basic authentication.                                                             | ""                                   |
 | remoteWrite.basicAuth.passwordSecretName| Name of Kubernetes Secret containing the basic auth password.                                                                    | ""                                   |
 | remoteWrite.basicAuth.passwordSecretKey | Key within the secret that holds the password.                                                                                   | password                             |
+| remoteWrite.bearerToken.enabled          | Enable Bearer token type authentication for remotewrite endoint.                                                             | "false"                                   |
+| remoteWrite.bearerToken.secretName| Name of Kubernetes Secret containing the bearer token for auth.                                                                    | ""                                   |
+| remoteWrite.bearerToken.secretKey | Key within the secret that holds the bearer token.                                                                                   | token                             |
 | remoteWrite.tls.enabled                 | Enable TLS for remote write.                                                                                                     | false                                |
 | remoteWrite.tls.caCertSecretName        | Name of Kubernetes Secret containing the CA certificate.                                                                         | ""                                   |
 | remoteWrite.tls.caCertSecretKey         | Key within the secret that holds the CA certificate.                                                                             | ca.crt                               |
 | remoteWrite.tls.insecure_skip_verify         | Toggle to skip TLS verification                                                                             | false                               |
-| clusterName                             | Label added to all metrics exported by this agent to identify the cluster.                                                       | example-cluster                      |
+| clusterName                             | Label added to all metrics exported by this agent to identify the cluster.                                                       | ""                      |
 | resources.limits.cpu                    | CPU resource limit for the Prometheus Agent pod.                                                                                 | 200m                                 |
 | resources.limits.memory                 | Memory resource limit for the Prometheus Agent pod.                                                                              | 256Mi                                |
 | resources.requests.cpu                  | CPU resource request for the Prometheus Agent pod.                                                                               | 100m                                 |
