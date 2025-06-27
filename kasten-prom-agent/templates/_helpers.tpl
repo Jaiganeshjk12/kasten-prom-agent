@@ -55,7 +55,7 @@ Validate chart values.
 This template contains all complex conditional validation logic for the chart.
 */}}
 {{- define "kasten-prom-agent.validateValues" -}}
-  {{- $errors := list -}} # Changed from [] to list for robustness
+  {{- $errors := list -}}
 
   {{- /* Get authentication flags */ -}}
   {{- $basicAuthEnabled := .Values.remoteWrite.basicAuth.enabled -}}
