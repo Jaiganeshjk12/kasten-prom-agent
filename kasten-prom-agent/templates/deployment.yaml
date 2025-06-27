@@ -1,4 +1,4 @@
-{{- include "kasten-prom-agent.validateValues" . -}}
+{{- include "kasten-prom-agent.validateValues" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
