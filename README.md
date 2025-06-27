@@ -6,7 +6,7 @@ This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster
 
 * Deploys Prometheus Agent in agent mode.
 * Configurable `remote_write` URL.
-* Supports basic authentication for `remote_write` using a Kubernetes Secret for the password.
+* Supports basic authentication and bearer token based authentication for `remote_write` using a Kubernetes Secret for the password.
 * Conditionally enables TLS for `remote_write` by mounting a CA certificate from a Kubernetes Secret.
 * Role-Based Access Control (RBAC) scoped to the agent's namespace for pod, service, and endpointslice discovery.
 * Configurable scrape configurations with default relabeling rules and an example `cluster` label.
