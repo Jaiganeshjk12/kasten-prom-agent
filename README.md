@@ -10,6 +10,7 @@ This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster
 * Conditionally enables TLS for `remote_write` by mounting a CA certificate from a Kubernetes Secret.
 * Role-Based Access Control (RBAC) scoped to the agent's namespace for pod, service, and endpointslice discovery.
 * Configurable scrape configurations with default relabeling rules and an example `cluster` label.
+* Configured to keep only the metrics that are configured for remote_writes and drop the rest. 
 
 ## Prerequisites
 
