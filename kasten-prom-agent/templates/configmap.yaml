@@ -29,6 +29,9 @@ data:
           {{- end }}
         {{- end }}
         write_relabel_configs:
+          - source_labels: [__name__]
+            regex: 'action_.*|.*_persistent_volume_.*|repository_data_.*|data_operation_.*|data_upload_session_.*|exec_.*|limiter_.*|export_storage_.*|snapshot_storage_.*|metering_license_.*|events_service_.*|process_.*|compliance_count'
+            action: keep
           - source_labels: [__address__]
             regex: '(.*)'
             target_label: cluster
