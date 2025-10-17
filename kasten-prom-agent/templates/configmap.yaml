@@ -12,6 +12,8 @@ data:
       - url: {{ .Values.remoteWrite.url | quote }}
         {{- if .Values.remoteWrite.bearerToken.enabled }}
         # Use bearer_token_file to read the token from a mounted secret
+        bearer_token_file: /etc/prometheus/secrets/{{ .Values.remoteWrite.bearerToken.secretKey | default "token" }}
+        {{- end }}
         remote_timeout: 30s
         queue_config:
           capacity: 5000
@@ -21,8 +23,6 @@ data:
           batch_send_deadline: 10s
           min_backoff: 100ms
           max_backoff: 10s
-        bearer_token_file: /etc/prometheus/secrets/{{ .Values.remoteWrite.bearerToken.secretKey | default "token" }}
-        {{- end }}
         {{- if .Values.remoteWrite.basicAuth.enabled }}
         basic_auth:
           username: {{ .Values.remoteWrite.basicAuth.username }}
