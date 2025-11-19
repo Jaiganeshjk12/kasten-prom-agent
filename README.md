@@ -25,7 +25,7 @@ This Helm chart deploys a Prometheus Agent for Kasten in your Kubernetes cluster
     ```bash
         helm repo add kasten-prom-agent https://jaiganeshjk12.github.io/kasten-prom-agent/
         helm repo update
-        ```
+    ```
 2.  **Prepare Secrets (if using Basic Auth or Bearer Token or TLS):**
 
     * **For Basic Authentication Password:**
